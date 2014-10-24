@@ -1,0 +1,33 @@
+---
+# tasks file for base-ubuntu
+
+- name: set locale en_US.UTF-8
+  locale_gen: name=en_US.UTF-8 state=present
+
+- name: update apt-get
+  apt: update_cache=yes
+
+- name: install basic packages
+  apt: name={{item}} state=latest
+  with_items:
+    - ntp
+    - git
+    - htop
+    - vim
+    - curl
+    - tmux
+    - openssl
+    - libssl-dev
+    - libssl-doc
+    - bash
+
+- name: run shellshock example command
+  command: env TESTVAR='() { :;}; echo vulnerable!' bash -c "echo Bash Test"
+  register: shellshock_result
+  failed_when: "'vulnerable!' in shellshock_result.stdout"
+  changed_when: False # this will never report 'changed' status
+
+##############################
+
+- include: python.yml
+  when: base_ubuntu_language == "python"
