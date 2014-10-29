@@ -12,7 +12,7 @@ install:
   - pip install ansible
 
 script:
-  - ./build.sh
+  - ./build.sh local
 
 
 

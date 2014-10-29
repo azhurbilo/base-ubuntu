@@ -14,7 +14,7 @@
     - libxslt1-dev
     - libmemcached-dev
     - libffi-dev
-
+    - libjpeg8-dev
 
 - name: python | update pip
   pip: name={{item}} state=latest
