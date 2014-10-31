@@ -3,6 +3,8 @@
 
 - name: set locale en_US.UTF-8
   locale_gen: name=en_US.UTF-8 state=present
+  when: travis is not defined
+  tags: test
 
 - name: update apt-get
   apt: update_cache=yes
