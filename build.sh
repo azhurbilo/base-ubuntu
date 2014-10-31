@@ -23,16 +23,32 @@ fi
 
 # Step 1:
 echo ">>> Step 1: check role/playbook syntax"
-ansible-playbook -i tests/${INVENTORY_FILE} tests/test.yml --syntax-check
+ansible-playbook -i ${INVENTORY_FILE} playbook.yml --syntax-check
 
 # Step 2:
 echo ">>> Step 2: run the role/playbook with ansible-playbook"
-ansible-playbook -i tests/${INVENTORY_FILE} tests/test.yml
+ansible-playbook -i ${INVENTORY_FILE} playbook.yml
 
 # Step 3:
-echo ">>> Step 3: run the role/playbook again, checking to make sure it's idempotent."
-ansible-playbook -i tests/${INVENTORY_FILE} tests/test.yml  | grep -q 'changed=0.*failed=0'\
-&& (echo 'Idempotence test: Success' && exit 0) || (echo 'Idempotence test: Fail' && exit 1)
+echo ">>> Step 4: run the role/playbook again, checking to make sure it's idempotent."
+echo ">>> Ansible..."
+ansible-playbook -i ${INVENTORY_FILE} playbook.yml > out.txt 2>&1
+
+cat out.txt
+
+cat out.txt | grep -q 'changed=0.*failed=0'\
+&& (echo 'Idempotence test: Success' && rm out.txt && exit 0) || (echo 'Idempotence test: Fail' && rm out.txt && exit 1)
+
+# Step 4:
+echo ">>> Step 5: run the role/playbook again, after machine reboot to make sure it's idempotent as well =)"
+vagrant reload
+echo ">>> Ansible..."
+ansible-playbook -i ${INVENTORY_FILE} playbook.yml > out.txt 2>&1
+
+cat out.txt
+
+cat out.txt | grep -q 'changed=0.*failed=0'\
+&& (echo 'Idempotence test after reboot: Success' && rm out.txt && exit 0) || (echo 'Idempotence test after reboot: Fail' && rm out.txt && exit 1)
 
 echo "=================="
 echo "SUCCESS"

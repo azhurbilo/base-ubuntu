@@ -15,6 +15,3 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     test.vm.network "private_network", ip: "192.168.33.02"
   end
 end
-
-# [provision command]:
-# ansible-playbook -i tests/vagrant-inventory tests/test.yml

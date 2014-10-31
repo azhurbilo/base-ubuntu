@@ -6,69 +6,72 @@ base-ubuntu (Ansible role)
 Ansible role to setup base foundation of Ubuntu instance.
 Role was tested with Ansible version 1.7
 
+Requirements
+------------
 
-Role Variables
---------------
+- [Ansible](http://docs.ansible.com/intro_installation.html)
+- [Vagrant](http://www.vagrantup.com/downloads.html)
+- [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 
+Usage
+------------
+To set up you new environment run:
 
-Name | Default Value | Available Values | Description  
---- | --- | --- | ---
-base_ubuntu_language | no | <ul><li>python</li></ul> | execution of additional tasks depends on this var to setup specific language-base environment.
+    ./build.sh vagrant
 
+If everything is Ok, you will see the output:
 
-Example Playbook
-----------------
-       
-    - hosts: machine
-      sudo: true
-      vars:
-        base_ubuntu_language: python
-      roles:
-        - base-ubuntu
-        
-
-Test role with Vagrant
-----------------
-
-Move to repo directory and run `./build.sh vagrant`
-
-If everything is Ok, you will see the part of output:
-
-    >>> Step 2: run the role/playbook with ansible-playbook
-
-    PLAY [machine] **************************************************************** 
-    
-    GATHERING FACTS *************************************************************** 
-    ok: [machine]
-    
-    TASK: [base-ubuntu | set locale en_US.UTF-8] ********************************** 
-    ok: [machine]
-    
-    TASK: [base-ubuntu | update apt-get] ****************************************** 
-    ok: [machine]
-    
-    TASK: [base-ubuntu | install basic packages] ********************************** 
-    changed: [machine] => (item=ntp,git,htop,vim,curl,tmux,openssl,libssl-dev,libssl-doc,bash)
-    
-    TASK: [base-ubuntu | run shellshock example command] ************************** 
-    ok: [machine]
-    
-    TASK: [base-ubuntu | python | install python packages] ************************ 
-    changed: [machine] => (item=python,python-dev,python-software-properties,python-pip,build-essential,libmysqlclient-dev,libxml2,libxml2-dev,libxslt1-dev,libmemcached-dev,libffi-dev)
-    
-    TASK: [base-ubuntu | python | update pip] ************************************* 
-    changed: [machine] => (item=pip)
-    changed: [machine] => (item=setuptools)
-    
-    PLAY RECAP ******************************************************************** 
-    machine                    : ok=7    changed=3    unreachable=0    failed=0   
-    
-    >>> Step 3: run the role/playbook again, checking to make sure it's idempotent.
-    Idempotence test: Success
+    Idempotence test after reboot: Success
     
     ==================
     SUCCESS
     ==================
-
-
+    
 Execute `vagrant ssh` for connecting to provisioned machine.
+ 
+`build.sh` also run some additional time-consuming steps like:
+  
+* run the role/playbook again, checking to make sure it's idempotent (no changes).
+* reboot virtual machine
+* restart provisioning after machine reboot to make sure it's idempotent as well
+
+Of course you can run ansible and vagrant commands separately, that is more flexible than run build.sh script.
+
+    vagrant up
+    ansible-playbook -i vagrant-inventory playbook.yml
+
+Note: I don't use `vagrant ansible provisioner`, which do provisioning with one command `vagrant up`, but it complicates the usage of ansible.
+In my opinion the provisiong way of you local virtual machine or EC2 Amazon instance should be the same.
+
+
+Dependencies
+------------
+
+None
+
+
+Example Playbook
+------------
+       
+    - hosts: machine
+      sudo: true
+      roles:
+        - base-ubuntu
+        
+
+
+Role Variables
+------------
+
+None
+
+
+License
+-------
+
+BSD
+
+Author Information
+------------------
+
+Role was created by [Artsiom Zhurbila](http://www.linkedin.com/in/zhurbila)

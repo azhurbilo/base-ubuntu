@@ -3,7 +3,5 @@
 - hosts: machine
   remote_user: root
   sudo: true
-  vars:
-    base_ubuntu_language: python
   roles:
     - base-ubuntu

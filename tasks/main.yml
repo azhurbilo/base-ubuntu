@@ -19,6 +19,7 @@
     - openssl
     - libssl-dev
     - libssl-doc
+    - build-essential
     - bash
 
 - name: run shellshock example command
@@ -26,8 +27,3 @@
   register: shellshock_result
   failed_when: "'vulnerable!' in shellshock_result.stdout"
   changed_when: False # this will never report 'changed' status
-
-##############################
-
-- include: python.yml
-  when: base_ubuntu_language == "python"
