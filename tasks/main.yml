@@ -15,6 +15,8 @@
     - ntp
     - git
     - htop
+    - iotop
+    - iftop
     - vim
     - curl
     - tmux
